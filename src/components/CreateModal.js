@@ -7,6 +7,7 @@ import { Button, Modal,
     Form, Input, Label, DropdownToggle,
     Dropdown, DropdownMenu, DropdownItem
 } from 'reactstrap';
+const {REACT_APP_BACKEND_URL} = process.env
 
 const AddModal = (props) =>{
     let {
@@ -56,7 +57,7 @@ const AddModal = (props) =>{
     useEffect(() => {
         setTimeout(() => {
           const fetchCategory = async () => {
-            const {data} = await axios.get(`http://localhost:8080/manage/category?limit=30`);
+            const {data} = await axios.get(`${REACT_APP_BACKEND_URL}manage/category?limit=30`);
             let category = data.results
             setCategory_list(category)
           };
@@ -66,7 +67,7 @@ const AddModal = (props) =>{
 
 
         const conditions = async () => {
-          const {data} = await axios.get(`http://localhost:8080/manage/condition/`)
+          const {data} = await axios.get(`${REACT_APP_BACKEND_URL}manage/condition/`)
           // console.log(data.results)
           setConditions(data.results)
         }
@@ -77,7 +78,7 @@ const AddModal = (props) =>{
 
       useEffect(() => {
         const rating = async () => {
-          const {data} = await axios.get(`http://localhost:8080/manage/rating/`)
+          const {data} = await axios.get(`${REACT_APP_BACKEND_URL}manage/rating/`)
           // console.log(data.data[0].condition_name)
           // console.log(condition_id)
           let prodRating = data.results
@@ -88,25 +89,27 @@ const AddModal = (props) =>{
         rating()
       }, [])
     // const editItem = async (id)=> {
-    //     const {data} = await axios.get(`http://localhost:8080/products/${id}`)
+    //     const {data} = await axios.get(`${REACT_APP_BACKEND_URL}products/${id}`)
     //     this.setState({modalOpen: true, ...data.data}, ()=>{
     //     })
     //     }
    const addformSubmit = async (e)=> {
-    e.preventDefault()
-        let edit = qs.stringify({name, quantity, price, description, condition_id, category_id, rating_id})
+      e.preventDefault()
+        let add = qs.stringify({name, quantity, price, description, condition_id, category_id, rating_id})
         Swal.fire({
             title: 'Do you want to save the changes?',
             showDenyButton: true,
             showCancelButton: true,
             confirmButtonText: `Save`,
             denyButtonText: `Don't save`,
-          }).then((result) => {
+          }).then(async (result) => {
             if (result.isConfirmed) {
-                // console.log(detailId)
-                axios.post(`http://localhost:8080/manage/product/`, edit)
-              Swal.fire('Saved!', '', 'success')
-              onClose()
+                console.log(add)
+                const create = await axios.post(`${REACT_APP_BACKEND_URL}manage/product/`, add)
+                if(create.status === 200){
+                  Swal.fire('Saved!', '', 'success')
+                  onClose()
+                }
             } else if (result.isDenied) {
               Swal.fire('Changes are not saved', '', 'info')
             }

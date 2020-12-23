@@ -8,6 +8,7 @@ import { Button, Modal,
     Dropdown, DropdownMenu, DropdownItem
 
 } from 'reactstrap';
+const {REACT_APP_BACKEND_URL} = process.env
 
 const EditModal = (props) =>{
     let {
@@ -64,7 +65,7 @@ const EditModal = (props) =>{
         setTimeout(() => {
           const fetchModal = async () => {
             
-            const {data} = await axios.get(`http://localhost:8080/manage/product/${detailId}`);
+            const {data} = await axios.get(`${REACT_APP_BACKEND_URL}manage/product/${detailId}`);
             
             setName(data.data[0].name);
             setQuantity(data.data[0].quantity);
@@ -84,7 +85,7 @@ const EditModal = (props) =>{
       /* -------------------------------------------------------------------------- */
       useEffect(() => {
           const fetchCategory = async () => {
-            const {data} = await axios.get(`http://localhost:8080/manage/category/`);
+            const {data} = await axios.get(`${REACT_APP_BACKEND_URL}manage/category/`);
             let category = data.results
             setCategory_list(category)
           };
@@ -92,7 +93,7 @@ const EditModal = (props) =>{
       /* -------------------------------------------------------------------------- */
 
         const selectCategory = async () => {
-          const {data} = await axios.get(`http://localhost:8080/manage/category/${Number(category)}`);
+          const {data} = await axios.get(`${REACT_APP_BACKEND_URL}manage/category/${Number(category)}`);
           mp = data.data[0].category_name
           setCategoryActive(mp)
           setCategoryId(data.data[0].id)
@@ -105,7 +106,7 @@ const EditModal = (props) =>{
 
        useEffect(() => {
         const conditions = async () => {
-          const {data} = await axios.get(`http://localhost:8080/manage/condition/`)
+          const {data} = await axios.get(`${REACT_APP_BACKEND_URL}manage/condition/`)
           // console.log(data.results)
           setConditions(data.results)
         }
@@ -113,7 +114,7 @@ const EditModal = (props) =>{
       /* -------------------------------------------------------------------------- */
 
         const selectCondition = async () => {
-          const {data} = await axios.get(`http://localhost:8080/manage/condition/${Number(conds)}`)
+          const {data} = await axios.get(`${REACT_APP_BACKEND_URL}manage/condition/${Number(conds)}`)
           // console.log(data.data[0].condition_name)
           // console.log(condition_id)
           let condName = data.data[0].condition_name
@@ -126,7 +127,7 @@ const EditModal = (props) =>{
 
       useEffect(() => {
         const rating = async () => {
-          const {data} = await axios.get(`http://localhost:8080/manage/rating/`)
+          const {data} = await axios.get(`${REACT_APP_BACKEND_URL}manage/rating/`)
           // console.log(data.data[0].condition_name)
           // console.log(condition_id)
           let prodRating = data.results
@@ -140,7 +141,7 @@ const EditModal = (props) =>{
 
       useEffect(() => {
         const selectRating = async () => {
-          const {data} = await axios.get(`http://localhost:8080/manage/rating/${Number(rating)}`)
+          const {data} = await axios.get(`${REACT_APP_BACKEND_URL}manage/rating/${Number(rating)}`)
           // console.log(data.data[0].condition_name)
           // console.log(condition_id)
           let prodRating = data.data[0].rating
@@ -166,7 +167,7 @@ const EditModal = (props) =>{
             denyButtonText: `Don't save`,
           }).then((result) => {
             if (result.isConfirmed) {
-                axios.patch(`http://localhost:8080/manage/product/${detailId}`, edit)
+                axios.patch(`${REACT_APP_BACKEND_URL}manage/product/${detailId}`, edit)
               Swal.fire('Saved!', '', 'success')
               onClose()
             } else if (result.isDenied) {
